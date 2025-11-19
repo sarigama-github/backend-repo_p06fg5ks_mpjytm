@@ -12,7 +12,7 @@ Model name is converted to lowercase for the collection name:
 """
 
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 
 # Example schemas (replace with your own):
 
@@ -38,11 +38,21 @@ class Product(BaseModel):
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
 
-# Add your own schemas here:
-# --------------------------------------------------
+# Real estate video project schemas
 
-# Note: The Flames database viewer will automatically:
-# 1. Read these schemas from GET /schema endpoint
-# 2. Use them for document validation when creating/editing
-# 3. Handle all database operations (CRUD) directly
-# 4. You don't need to create any database endpoints!
+class Scene(BaseModel):
+    image_url: str = Field(..., description="URL to the uploaded property image")
+    caption: Optional[str] = Field(None, description="Text overlay for this scene")
+    duration: float = Field(3.0, gt=0, description="Duration of the scene in seconds")
+    ken_burns: bool = Field(True, description="Apply subtle pan/zoom effect")
+
+class VideoProject(BaseModel):
+    """
+    Collection name: "videoproject" (lowercase of class name)
+    """
+    title: str = Field(..., description="Project title")
+    description: Optional[str] = Field(None, description="Project description")
+    scenes: List[Scene] = Field(default_factory=list, description="Ordered list of scenes")
+    music: Optional[str] = Field(None, description="Music track identifier or URL")
+    status: str = Field("draft", description="draft | rendering | ready | failed")
+    output_url: Optional[str] = Field(None, description="URL to the rendered video")
